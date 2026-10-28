@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EliteView - Next-Gen Offline Media Player for Android</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            elite: {
+              900: '#07090e',
+              850: '#0c0f17',
+              800: '#111625',
+              700: '#1a2238',
+              accent: '#6366f1',
+              cyan: '#06b6d4',
+              violet: '#8b5cf6',
+              emerald: '#10b981'
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'floating 6s ease-in-out infinite',
+          },
+          keyframes: {
+            floating: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom glow effects and scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07090e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f293d;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6366f1;
+    }
+    .radial-gradient-bg {
+      background: radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.15), transparent 70%),
+                  radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.1), transparent 60%);
+    }
+    .glass-card {
+      background: rgba(17, 22, 37, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.35);
+    }
+    .neon-border {
+      box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-elite-900 text-slate-200 font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+
+  <!-- Background Glow Orbs -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] pointer-events-none opacity-40 blur-[130px] -z-10 bg-gradient-to-r from-indigo-600/30 via-violet-600/20 to-cyan-500/30"></div>
+
+  <!-- NAVIGATION BAR -->
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-4 lg:px-8 transition-all duration-300" id="mainHeader">
+    <div class="max-w-7xl mx-auto flex items-center justify-between h-20">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <!-- EliteView Official Orange Play Icon -->
+        <div class="w-11 h-11 relative flex-shrink-0 group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_6px_16px_rgba(255,87,34,0.45)]">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <defs>
+              <linearGradient id="evOrangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff7a00"/>
+                <stop offset="50%" stop-color="#ff5722"/>
+                <stop offset="100%" stop-color="#e64a19"/>
+              </linearGradient>
+              <linearGradient id="evPlayGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#eef2f7"/>
+              </linearGradient>
+            </defs>
+            <!-- Orange Sphere Base -->
+            <circle cx="50" cy="50" r="48" fill="url(#evOrangeGrad)"/>
+            <!-- Glossy Highlight pill top right -->
+            <path d="M 58 11 C 65 11, 87 23, 89 31 C 89 33, 85 32, 78 26 C 71 20, 58 17, 58 11 Z" fill="#ffffff" opacity="0.85"/>
+            <circle cx="61" cy="9" r="3.5" fill="#ffffff" opacity="0.85"/>
+            <!-- Inner Soft Shadow Arc -->
+            <path d="M 12 50 A 38 38 0 0 0 50 88 A 48 48 0 0 1 12 50 Z" fill="#d84315" opacity="0.4"/>
+            <!-- White Play Triangle with smooth rounded corners -->
+            <path d="M 39 31.5 C 36.5 30 35 31.2 35 34.2 L 35 65.8 C 35 68.8 36.5 70 39 68.5 L 68 52.8 C 70.5 51.4 70.5 48.6 68 47.2 Z" fill="url(#evPlayGrad)"/>
+          </svg>
+        </div>
+        <div>
+          <span class="text-2xl font-bold tracking-tight text-white flex items-center gap-1">
+            Elite<span class="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">View</span>
+          </span>
+          <span class="text-[10px] tracking-widest block uppercase text-slate-400 font-semibold -mt-1">Video All Format</span>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#features" class="hover:text-orange-400 transition-colors">Key Features</a>
+        <a href="#playground" class="hover:text-orange-400 transition-colors">Interactive Demo</a>
+        <a href="#specs" class="hover:text-orange-400 transition-colors">Supported Formats</a>
+        <a href="#privacy" class="hover:text-orange-400 transition-colors">Privacy First</a>
+        <a href="#faq" class="hover:text-orange-400 transition-colors">FAQ</a>
+      </nav>
+
+      <!-- CTA Buttons -->
+      <div class="hidden sm:flex items-center gap-3">
+        <a href="https://play.google.com/store/apps/details?id=com.rishi.eliteview" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 text-white font-semibold text-sm shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2">
+          <i class="fa-brands fa-google-play text-xs"></i>
+          <span>Get on Google Play</span>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Toggle Button -->
+      <button id="menuToggleBtn" onclick="toggleMobileMenu()" class="md:hidden text-slate-400 hover:text-white p-2 rounded-lg" aria-label="Toggle menu">
+        <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenu" class="hidden md:hidden pb-6 pt-2 border-t border-slate-800 space-y-3">
+      <a href="#features" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-elite-800 hover:text-orange-400 text-sm font-medium">Key Features</a>
+      <a href="#playground" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-elite-800 hover:text-orange-400 text-sm font-medium">Interactive Demo</a>
+      <a href="#specs" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-elite-800 hover:text-orange-400 text-sm font-medium">Supported Formats</a>
+      <a href="#privacy" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-elite-800 hover:text-orange-400 text-sm font-medium">Privacy First</a>
+      <a href="#faq" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-elite-800 hover:text-orange-400 text-sm font-medium">FAQ</a>
+      <div class="pt-2">
+        <a href="https://play.google.com/store/apps/details?id=com.rishi.eliteview" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25">
+          <i class="fa-brands fa-google-play text-sm"></i> Download on Google Play
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="relative pt-12 pb-20 lg:pt-20 lg:pb-32 overflow-hidden radial-gradient-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <!-- Hero Text -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          
+          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 text-orange-300 text-xs font-semibold tracking-wide uppercase">
+            <span class="w-2 h-2 rounded-full bg-orange-400 animate-ping"></span>
+            Verified on Google Play Store
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+            Experience Crystal Clear <span class="bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-400 bg-clip-text text-transparent">4K Playback</span> Anywhere.
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            EliteView is a fast, lightweight, and zero-lag offline media suite for Android. Featuring floating PiP window multitasking, uninterrupted background audio, a clean gallery viewer, and instant image-to-PDF conversion.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+            <a href="https://play.google.com/store/apps/details?id=com.rishi.eliteview" target="_blank" rel="noopener noreferrer" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 text-white font-bold text-base shadow-xl shadow-orange-500/30 hover:-translate-y-1 transition-all flex items-center justify-center gap-3">
+              <i class="fa-brands fa-google-play text-xl"></i>
+              <span>Download on Google Play</span>
+            </a>
+            <a href="#playground" class="px-7 py-3.5 rounded-xl glass-card hover:bg-slate-800/80 text-white font-medium text-base hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-orange-400"></i>
+              <span>Live Simulator</span>
+            </a>
+          </div>
+
+          <!-- Feature Badges -->
+          <div class="pt-6 border-t border-slate-800/80 grid grid-cols-3 gap-4 max-w-md mx-auto lg:mx-0 text-left">
+            <div>
+              <p class="text-xl sm:text-2xl font-bold text-white">100%</p>
+              <p class="text-xs text-slate-400">Offline & Private</p>
+            </div>
+            <div>
+              <p class="text-xl sm:text-2xl font-bold text-orange-400">4K UHD</p>
+              <p class="text-xs text-slate-400">Hardware Decoded</p>
+            </div>
+            <div>
+              <p class="text-xl sm:text-2xl font-bold text-amber-400">&lt; 18 MB</p>
+              <p class="text-xs text-slate-400">Ultra Lightweight</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Interactive Phone Mockup -->
+        <div class="lg:col-span-5 flex justify-center lg:justify-end">
+          <div class="relative w-full max-w-[340px] sm:max-w-[370px]">
+            
+            <!-- Glow background -->
+            <div class="absolute -inset-4 bg-gradient-to-r from-orange-500 to-amber-500 rounded-[50px] blur-2xl opacity-20"></div>
+
+            <!-- Phone Frame -->
+            <div class="relative rounded-[45px] p-3.5 bg-gradient-to-b from-slate-700 via-slate-900 to-black shadow-2xl border-2 border-slate-700/60 neon-border animate-float">
+              
+              <!-- Screen Container -->
+              <div class="rounded-[36px] bg-elite-850 overflow-hidden border border-slate-800 relative h-[560px] flex flex-col justify-between">
+                
+                <!-- Notch / Camera cut out -->
+                <div class="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40 flex items-center justify-center">
+                  <div class="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700"></div>
+                </div>
+
+                <!-- Phone Top Bar with custom Orange Play Icon -->
+                <div class="pt-8 px-5 pb-3 flex justify-between items-center text-xs text-slate-400 z-10">
+                  <div class="flex items-center gap-2">
+                    <div class="w-5 h-5 rounded-full shadow flex-shrink-0">
+                      <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <circle cx="50" cy="50" r="48" fill="#ff5722"/>
+                        <path d="M 58 11 C 65 11, 87 23, 89 31 C 89 33, 85 32, 78 26 C 71 20, 58 17, 58 11 Z" fill="#ffffff" opacity="0.85"/>
+                        <circle cx="61" cy="9" r="3.5" fill="#ffffff" opacity="0.85"/>
+                        <path d="M 39 31.5 C 36.5 30 35 31.2 35 34.2 L 35 65.8 C 35 68.8 36.5 70 39 68.5 L 68 52.8 C 70.5 51.4 70.5 48.6 68 47.2 Z" fill="#ffffff"/>
+                      </svg>
+                    </div>
+                    <span class="font-semibold text-white">EliteView</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-[10px] bg-orange-500/20 text-orange-300 font-mono px-1.5 py-0.5 rounded">4K 60FPS</span>
+                    <i class="fa-solid fa-wifi text-[10px]"></i>
+                    <i class="fa-solid fa-battery-full text-[11px] text-emerald-400"></i>
+                  </div>
+                </div>
+
+                <!-- Video Viewport Simulator -->
+                <div class="relative flex-1 bg-black flex flex-col justify-center items-center overflow-hidden group">
+                  <div class="absolute inset-0 bg-gradient-to-br from-stone-950 via-slate-900 to-orange-950/40 opacity-90 flex items-center justify-center">
+                    
+                    <div class="relative w-full h-full flex flex-col items-center justify-center p-6 text-center">
+                      <div id="heroPulseRing" class="w-32 h-32 rounded-full border-2 border-dashed border-orange-400/40 flex items-center justify-center animate-spin" style="animation-duration: 20s;">
+                        <div class="w-20 h-20 rounded-full flex items-center justify-center drop-shadow-xl cursor-pointer" onclick="toggleHeroPlayback()">
+                          <svg viewBox="0 0 100 100" class="w-full h-full">
+                            <circle cx="50" cy="50" r="48" fill="#ff5722"/>
+                            <path d="M 58 11 C 65 11, 87 23, 89 31 C 89 33, 85 32, 78 26 C 71 20, 58 17, 58 11 Z" fill="#ffffff" opacity="0.85"/>
+                            <circle cx="61" cy="9" r="3.5" fill="#ffffff" opacity="0.85"/>
+                            <path d="M 39 31.5 C 36.5 30 35 31.2 35 34.2 L 35 65.8 C 35 68.8 36.5 70 39 68.5 L 68 52.8 C 70.5 51.4 70.5 48.6 68 47.2 Z" fill="#ffffff"/>
+                          </svg>
+                        </div>
+                      </div>
+                      
+                      <!-- Video Title Overlay -->
+                      <div class="mt-5 text-center">
+                        <p class="text-sm font-semibold text-white tracking-wide" id="heroTrackTitle">Cinematic_Horizon_4K.mkv</p>
+                        <p class="text-xs text-slate-400 mt-1">HEVC 10-bit • Ultra HDR • 60 FPS</p>
+                      </div>
+
+                      <!-- Mini Floating PiP Badge Simulated -->
+                      <div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 text-[10px] text-orange-300 flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-clone text-[9px]"></i>
+                        <span>PiP Active</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Overlay Playback Controls -->
+                  <div class="absolute bottom-4 left-4 right-4 bg-slate-900/80 backdrop-blur-md rounded-2xl p-3 border border-white/10 space-y-2">
+                    
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-700 h-1.5 rounded-full overflow-hidden cursor-pointer" onclick="scrubHeroTimeline(event)">
+                      <div id="heroProgressBar" class="bg-gradient-to-r from-orange-400 to-amber-500 h-full w-[45%] transition-all"></div>
+                    </div>
+                    
+                    <!-- Time stamps -->
+                    <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                      <span id="heroCurrentTime">01:42</span>
+                      <span>03:48</span>
+                    </div>
+
+                    <!-- Button Controls -->
+                    <div class="flex items-center justify-between pt-1">
+                      <button onclick="changeHeroVolume()" class="text-slate-400 hover:text-white text-xs p-1" title="Volume">
+                        <i class="fa-solid fa-volume-high text-orange-400" id="heroVolIcon"></i>
+                      </button>
+
+                      <div class="flex items-center gap-3">
+                        <button onclick="skipHero(-10)" class="text-slate-300 hover:text-white text-xs">
+                          <i class="fa-solid fa-rotate-left"></i> 10s
+                        </button>
+                        <button onclick="toggleHeroPlayback()" class="w-8 h-8 rounded-full bg-orange-600 hover:bg-orange-500 text-white flex items-center justify-center text-xs shadow-md transition-transform active:scale-95">
+                          <i class="fa-solid fa-pause" id="heroPlayBtnState"></i>
+                        </button>
+                        <button onclick="skipHero(10)" class="text-slate-300 hover:text-white text-xs">
+                          10s <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                      </div>
+
+                      <button onclick="toggleHeroPipAlert()" class="text-slate-400 hover:text-orange-400 text-xs p-1" title="Float Pop-up">
+                        <i class="fa-solid fa-up-right-from-square"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Bottom Gestures Helper -->
+                <div class="bg-elite-800/90 py-3 px-5 text-center border-t border-slate-800">
+                  <p class="text-[11px] text-slate-400 flex items-center justify-center gap-3">
+                    <span><i class="fa-solid fa-hand-pointer text-orange-400 mr-1"></i> Swipe Brightness</span>
+                    <span class="text-slate-600">•</span>
+                    <span><i class="fa-solid fa-volume-high text-amber-400 mr-1"></i> Swipe Sound</span>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Floating Highlights Pill -->
+            <div class="absolute -bottom-6 -left-6 glass-card p-3 rounded-2xl shadow-xl flex items-center gap-3 border border-orange-500/30">
+              <div class="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center text-sm">
+                <i class="fa-solid fa-battery-charging"></i>
+              </div>
+              <div class="text-left">
+                <p class="text-xs font-bold text-white">Hardware Accelerated</p>
+                <p class="text-[10px] text-slate-400">40% Less Battery Drain</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES GRID -->
+  <section id="features" class="py-20 bg-elite-850 relative border-y border-slate-800/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+        <span class="text-cyan-400 font-semibold tracking-wider text-xs uppercase">Engineered for Performance</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          Everything You Expect From a Pro Media Player
+        </h2>
+        <p class="text-slate-400 text-sm sm:text-base">
+          Engineered natively to handle demanding 4K 10-bit files, background audio streams, and versatile media utilities seamlessly.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Feature 1 -->
+        <div class="glass-card p-7 rounded-3xl transition-all duration-300 hover:-translate-y-1.5 group">
+          <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-film"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Ultra HD 4K & All-Format Engine</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Full codec integration. Decode MKV, MP4, AVI, WebM, MOV, and 10-bit HDR flawlessly without needing external codec plugins.
+          </p>
+          <div class="flex flex-wrap gap-1.5 text-[11px] font-mono text-cyan-300">
+            <span class="px-2 py-0.5 rounded bg-elite-900 border border-slate-800">MKV</span>
+            <span class="px-2 py-0.5 rounded bg-elite-900 border border-slate-800">MP4</span>
+            <span class="px-2 py-0.5 rounded bg-elite-900 border border-slate-800">HEVC/H.265</span>
+            <span class="px-2 py-0.5 rounded bg-elite-900 border border-slate-800">AV1</span>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="glass-card p-7 rounded-3xl transition-all duration-300 hover:-translate-y-1.5 group">
+          <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-clone"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Floating Pop-up & PiP Mode</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Chat on WhatsApp, browse social feeds, or send emails without stopping your movie. Resize and drag the floating video anywhere.
+          </p>
+          <div class="flex items-center gap-2 text-xs text-indigo-300 font-medium">
+            <i class="fa-solid fa-check text-cyan-400"></i> Seamless multitasking on Android
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="glass-card p-7 rounded-3xl transition-all duration-300 hover:-translate-y-1.5 group">
+          <div class="w-14 h-14 rounded-2xl bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-violet-500 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-headphones-simple"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Background Audio Playback</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Turn any video lecture, podcast, or concert into pure background audio with your screen turned off or while locked.
+          </p>
+          <div class="flex items-center gap-2 text-xs text-indigo-300 font-medium">
+            <i class="fa-solid fa-check text-cyan-400"></i> Saves up to 65% battery screen time
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="glass-card p-7 rounded-3xl transition-all duration-300 hover:-translate-y-1.5 group">
+          <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Image-to-PDF Studio</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Convert phone pictures, notes, or scanned documents directly into clean, lightweight PDF documents right inside EliteView.
+          </p>
+          <div class="flex items-center gap-2 text-xs text-indigo-300 font-medium">
+            <i class="fa-solid fa-check text-cyan-400"></i> Zero cloud uploads; 100% on-device
+          </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="glass-card p-7 rounded-3xl transition-all duration-300 hover:-translate-y-1.5 group">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Smart Gesture Controls</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Control brightness on the left, volume on the right, and double tap to seek forward or backward. Pinch to zoom in any scene.
+          </p>
+          <div class="flex items-center gap-2 text-xs text-indigo-300 font-medium">
+            <i class="fa-solid fa-check text-cyan-400"></i> Customizable sensitivity & lock mode
+          </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="glass-card p-7 rounded-3xl transition-all duration-300 hover:-translate-y-1.5 group">
+          <div class="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-rose-500 group-hover:text-white transition-all duration-300">
+            <i class="fa-solid fa-images"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-2">Private Gallery & Vault</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Organize videos and photos into smart albums. Fast thumbnails, timeline view, and quick delete/share options built for speed.
+          </p>
+          <div class="flex items-center gap-2 text-xs text-indigo-300 font-medium">
+            <i class="fa-solid fa-check text-cyan-400"></i> Lightning-fast folder indexing
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE PLAYGROUND / LIVE DEMO SECTION -->
+  <section id="playground" class="py-24 relative overflow-hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-12 space-y-3">
+        <span class="text-indigo-400 font-semibold tracking-wider text-xs uppercase">Interactive Simulator</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Test EliteView Features Live</h2>
+        <p class="text-slate-400 text-sm">Switch tabs below to see how each core mode works directly inside the app.</p>
+      </div>
+
+      <!-- Simulator Tabs -->
+      <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8">
+        <button onclick="switchTab('player')" id="tab-player" class="tab-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+          <i class="fa-solid fa-play text-xs"></i> 4K Video Engine
+        </button>
+        <button onclick="switchTab('pip')" id="tab-pip" class="tab-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-elite-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-2">
+          <i class="fa-solid fa-clone text-xs"></i> Floating PiP
+        </button>
+        <button onclick="switchTab('audio')" id="tab-audio" class="tab-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-elite-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-2">
+          <i class="fa-solid fa-wave-square text-xs"></i> Music Visualizer
+        </button>
+        <button onclick="switchTab('pdf')" id="tab-pdf" class="tab-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-elite-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-2">
+          <i class="fa-solid fa-file-pdf text-xs"></i> Image to PDF Tool
+        </button>
+      </div>
+
+      <!-- Interactive Canvas Board -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl min-h-[420px] flex items-center justify-center relative">
+        
+        <!-- TAB 1: VIDEO ENGINE VIEW -->
+        <div id="view-player" class="w-full max-w-3xl space-y-5">
+          <div class="relative bg-black rounded-2xl overflow-hidden aspect-video border border-slate-800 flex items-center justify-center shadow-inner group">
+            
+            <!-- Dynamic Video Art / Canvas Canvas -->
+            <div id="demoVideoBackdrop" class="absolute inset-0 bg-gradient-to-tr from-slate-950 via-indigo-950 to-slate-900 flex items-center justify-center">
+              <div class="text-center p-6 space-y-3">
+                <div class="inline-block p-4 rounded-full bg-cyan-500/10 text-cyan-400 text-4xl mb-2 animate-pulse">
+                  <i class="fa-solid fa-mountain-sun"></i>
+                </div>
+                <h4 class="text-lg sm:text-xl font-bold text-white tracking-wide">Nature_Cinematic_Wildlife_4K.mkv</h4>
+                <p class="text-xs text-slate-400 font-mono">Res: 3840x2160 • Codec: AV01 • Bitrate: 42.8 Mbps</p>
+                <div class="flex justify-center gap-2 text-xs">
+                  <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-medium">HDR10+</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-medium">Dolby Atmos</span>
+                  <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-medium">Hardware Decoded</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gesture Indicators Simulator -->
+            <div id="gestureNotice" class="absolute top-4 left-4 bg-black/70 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10 text-xs text-white hidden flex items-center gap-2">
+              <i class="fa-solid fa-sun text-amber-400" id="gestureIcon"></i>
+              <span id="gestureLabel">Brightness: 80%</span>
+            </div>
+
+            <!-- Interactive On-Screen Play Overlay -->
+            <div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/95 via-black/60 to-transparent">
+              <div class="w-full bg-slate-700/80 h-1.5 rounded-full mb-3 cursor-pointer" onclick="updateDemoProgress(event)">
+                <div id="demoProgress" class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-full w-1/3 rounded-full"></div>
+              </div>
+              <div class="flex items-center justify-between text-xs text-white">
+                <div class="flex items-center gap-4">
+                  <button onclick="toggleDemoPlay()" class="text-white hover:text-cyan-400 text-base">
+                    <i class="fa-solid fa-play" id="demoPlayBtn"></i>
+                  </button>
+                  <span class="font-mono text-slate-300" id="demoTime">04:12 / 12:45</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button onclick="simulateGesture('bright')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300">
+                    <i class="fa-solid fa-sun mr-1 text-amber-400"></i> Tap Brightness
+                  </button>
+                  <button onclick="simulateGesture('volume')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300">
+                    <i class="fa-solid fa-volume-high mr-1 text-cyan-400"></i> Tap Volume
+                  </button>
+                  <button onclick="switchTab('pip')" class="px-2.5 py-1 rounded bg-indigo-600/40 hover:bg-indigo-600 text-[11px] text-white">
+                    <i class="fa-solid fa-clone mr-1"></i> Pop-up Mode
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <p class="text-xs text-center text-slate-400">Notice: EliteView hardware acceleration ensures zero thermal throttling on Android 8.0 through Android 15+.</p>
+        </div>
+
+        <!-- TAB 2: PIP FLOATING WINDOW -->
+        <div id="view-pip" class="w-full max-w-2xl hidden space-y-6">
+          <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 relative min-h-[300px] overflow-hidden flex flex-col justify-between">
+            
+            <!-- Simulated Background App (e.g. Chat / Browser) -->
+            <div class="space-y-3 opacity-30 pointer-events-none">
+              <div class="flex items-center gap-3 pb-3 border-b border-slate-700">
+                <div class="w-8 h-8 rounded-full bg-slate-600"></div>
+                <div>
+                  <div class="h-3 w-28 bg-slate-500 rounded"></div>
+                  <div class="h-2 w-16 bg-slate-600 rounded mt-1"></div>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="p-3 bg-slate-800 rounded-xl w-3/4 text-xs">Hey, send me the trip notes when you're free!</div>
+                <div class="p-3 bg-indigo-900/40 rounded-xl w-2/3 ml-auto text-xs text-right">Sure, watching the conference video in EliteView PiP right now!</div>
+                <div class="p-3 bg-slate-800 rounded-xl w-1/2 text-xs">Awesome multitasking 🔥</div>
+              </div>
+            </div>
+
+            <!-- Movable Floating PiP Window -->
+            <div id="draggablePip" class="absolute top-8 right-6 w-56 sm:w-64 bg-black rounded-xl border-2 border-cyan-400 shadow-2xl p-2.5 cursor-move transition-all select-none group">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 pb-1.5 border-b border-white/10">
+                <span class="text-white font-medium truncate w-32 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Live PiP
+                </span>
+                <div class="flex gap-1.5">
+                  <button onclick="alertPiPAction('Expanded to full screen')" class="hover:text-white"><i class="fa-solid fa-maximize"></i></button>
+                  <button onclick="alertPiPAction('Closed PiP window')" class="hover:text-red-400"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+              </div>
+              <div class="h-28 bg-gradient-to-br from-indigo-950 to-slate-900 rounded-lg flex items-center justify-center my-2 text-center p-2">
+                <div>
+                  <i class="fa-solid fa-play text-cyan-400 text-lg"></i>
+                  <p class="text-[10px] text-slate-300 mt-1 font-mono">Playing in Background</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-center text-[10px] text-slate-400 pt-1">
+                <span>Drag to relocate</span>
+                <span class="text-cyan-400 font-semibold">EliteView Multi</span>
+              </div>
+            </div>
+
+            <div class="text-center pt-4">
+              <p class="text-xs text-slate-400">✨ Click and drag the floating video card around to experience picture-in-picture freedom.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: MUSIC VISUALIZER -->
+        <div id="view-audio" class="w-full max-w-2xl hidden space-y-6 text-center">
+          <div class="p-8 rounded-2xl bg-elite-900 border border-slate-800">
+            
+            <!-- Vinyl / Disk animation -->
+            <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-tr from-slate-900 via-indigo-900 to-black p-2 border-4 border-slate-700 shadow-2xl relative mb-6">
+              <div class="w-full h-full rounded-full border border-dashed border-cyan-400/50 flex items-center justify-center animate-spin" style="animation-duration: 6s;">
+                <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs">
+                  <i class="fa-solid fa-music"></i>
+                </div>
+              </div>
+            </div>
+
+            <h4 class="text-xl font-bold text-white">Midnight_Synthwave_Lossless.flac</h4>
+            <p class="text-xs text-slate-400 mt-1">Stereo 24-bit 96kHz • Background Audio Active</p>
+
+            <!-- Dynamic Equalizer Bars -->
+            <div class="flex items-end justify-center gap-1.5 h-20 my-6">
+              <div class="w-2.5 bg-cyan-400 rounded-t h-12 animate-pulse"></div>
+              <div class="w-2.5 bg-indigo-500 rounded-t h-16 animate-pulse" style="animation-delay: 150ms;"></div>
+              <div class="w-2.5 bg-violet-400 rounded-t h-10 animate-pulse" style="animation-delay: 300ms;"></div>
+              <div class="w-2.5 bg-cyan-400 rounded-t h-20 animate-pulse" style="animation-delay: 75ms;"></div>
+              <div class="w-2.5 bg-indigo-400 rounded-t h-8 animate-pulse" style="animation-delay: 200ms;"></div>
+              <div class="w-2.5 bg-violet-500 rounded-t h-14 animate-pulse" style="animation-delay: 350ms;"></div>
+              <div class="w-2.5 bg-cyan-300 rounded-t h-16 animate-pulse" style="animation-delay: 120ms;"></div>
+            </div>
+
+            <div class="flex justify-center items-center gap-6">
+              <button class="text-slate-400 hover:text-white"><i class="fa-solid fa-backward-step text-lg"></i></button>
+              <button class="w-12 h-12 rounded-full bg-cyan-500 hover:bg-cyan-400 text-black flex items-center justify-center shadow-lg shadow-cyan-500/30 text-lg">
+                <i class="fa-solid fa-pause"></i>
+              </button>
+              <button class="text-slate-400 hover:text-white"><i class="fa-solid fa-forward-step text-lg"></i></button>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400">Lock your phone or switch apps—your audio keeps playing seamlessly in the notification tray.</p>
+        </div>
+
+        <!-- TAB 4: IMAGE TO PDF CONVERTER -->
+        <div id="view-pdf" class="w-full max-w-xl hidden space-y-5">
+          <div class="bg-elite-900 border border-slate-800 rounded-2xl p-6">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-file-pdf"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white">EliteView Document Forge</h4>
+                  <p class="text-[11px] text-slate-400">100% Offline Image to PDF Generator</p>
+                </div>
+              </div>
+              <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 font-medium">Instant</span>
+            </div>
+
+            <!-- Simulated Selected Images -->
+            <div class="grid grid-cols-3 gap-3 my-4">
+              <div class="aspect-square bg-slate-800 rounded-xl border border-slate-700 flex flex-col items-center justify-center text-slate-400 text-xs p-2 relative group">
+                <i class="fa-solid fa-image text-xl mb-1 text-indigo-400"></i>
+                <span>Receipt_01.jpg</span>
+                <span class="absolute top-1 right-1 bg-emerald-500 text-black text-[9px] font-bold px-1 rounded">Page 1</span>
+              </div>
+              <div class="aspect-square bg-slate-800 rounded-xl border border-slate-700 flex flex-col items-center justify-center text-slate-400 text-xs p-2 relative group">
+                <i class="fa-solid fa-image text-xl mb-1 text-cyan-400"></i>
+                <span>Notes_Scan.png</span>
+                <span class="absolute top-1 right-1 bg-emerald-500 text-black text-[9px] font-bold px-1 rounded">Page 2</span>
+              </div>
+              <div class="aspect-square border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl flex flex-col items-center justify-center text-slate-500 hover:text-indigo-400 cursor-pointer text-xs transition-colors" onclick="addMockScanImage()">
+                <i class="fa-solid fa-plus text-lg mb-1"></i>
+                <span>Add More</span>
+              </div>
+            </div>
+
+            <!-- Output Options -->
+            <div class="space-y-2 text-xs text-slate-300">
+              <div class="flex justify-between py-1">
+                <span>PDF Quality:</span>
+                <span class="text-cyan-400 font-semibold">High (300 DPI Original)</span>
+              </div>
+              <div class="flex justify-between py-1">
+                <span>File Destination:</span>
+                <span class="text-slate-400">/Storage/Emulated/0/EliteView/PDFs</span>
+              </div>
+            </div>
+
+            <!-- Convert Button -->
+            <button onclick="simulatePdfConversion()" id="pdfConvertBtn" class="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20">
+              <i class="fa-solid fa-file-arrow-down"></i>
+              <span>Convert 2 Images to PDF</span>
+            </button>
+            <p id="pdfStatusMsg" class="text-center text-xs text-emerald-400 mt-2 hidden"></p>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TECHNICAL SPECIFICATIONS & FORMATS -->
+  <section id="specs" class="py-20 bg-elite-850 border-t border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-14 space-y-2">
+        <span class="text-cyan-400 font-semibold tracking-wider text-xs uppercase">Engineered for Compatibility</span>
+        <h2 class="text-3xl font-extrabold text-white">Full Technical Specifications</h2>
+        <p class="text-slate-400 text-sm">EliteView eliminates "Codec not supported" errors with universal hardware & software decoding.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Spec Card 1 -->
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-video"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Video Formats</h3>
+              <p class="text-xs text-slate-400">Universal Decoding</p>
+            </div>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-300 font-mono">
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>MP4, M4V, MKV</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>AVI, WMV, MOV</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>FLV, 3GP, WEBM</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>TS, M2TS, VOB</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Spec Card 2 -->
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-music"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Audio Formats</h3>
+              <p class="text-xs text-slate-400">Lossless & Surround</p>
+            </div>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-300 font-mono">
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>MP3, AAC, M4A</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>FLAC Lossless (24-bit)</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>WAV, OGG, OPUS</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>AC3, E-AC3, DTS</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Spec Card 3 -->
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-closed-captioning"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">Subtitles & Track</h3>
+              <p class="text-xs text-slate-400">Multi-Stream Sync</p>
+            </div>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-300 font-mono">
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>SRT, ASS, SSA</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>VTT (WebVTT)</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>Multiple Audio Tracks</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>Subtitle Delay Sync</span> <i class="fa-solid fa-check text-cyan-400"></i>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Spec Card 4 -->
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-mobile-screen"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-white">System Specs</h3>
+              <p class="text-xs text-slate-400">Android Requirements</p>
+            </div>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-300 font-mono">
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>Min OS</span> <span class="text-white">Android 8.0 (Oreo)+</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>Architecture</span> <span class="text-white">arm64-v8a / v7a</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>Package ID</span> <span class="text-indigo-400">com.rishi.eliteview</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-slate-800 pb-1">
+              <span>App Size</span> <span class="text-emerald-400">&lt; 18 MB</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRIVACY & SECURITY FIRST SPOTLIGHT -->
+  <section id="privacy" class="py-20 relative">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="glass-card rounded-3xl p-8 sm:p-12 border border-emerald-500/20 bg-gradient-to-b from-elite-850 to-elite-900 relative overflow-hidden">
+        
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-8 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold uppercase">
+              <i class="fa-solid fa-shield-halved"></i> 100% On-Device Privacy
+            </div>
+            <h2 class="text-3xl font-extrabold text-white">Your Videos, Photos & Files Never Leave Your Device</h2>
+            <p class="text-slate-300 text-sm leading-relaxed">
+              Unlike many modern apps that push personal media to remote cloud analytics, EliteView is built entirely offline. No tracking cookies, no server uploads, and no hidden account creation. Your gallery belongs solely to you.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+              <div class="flex items-center gap-2.5 text-xs text-slate-200">
+                <i class="fa-solid fa-ban text-emerald-400"></i> No Cloud Backdoors
+              </div>
+              <div class="flex items-center gap-2.5 text-xs text-slate-200">
+                <i class="fa-solid fa-lock text-emerald-400"></i> Zero Personal Tracking
+              </div>
+              <div class="flex items-center gap-2.5 text-xs text-slate-200">
+                <i class="fa-solid fa-fingerprint text-emerald-400"></i> Transparent Permissions
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 flex justify-center">
+            <div class="w-36 h-36 rounded-3xl bg-gradient-to-tr from-emerald-600/30 via-slate-800 to-teal-500/20 border-2 border-emerald-500/40 flex items-center justify-center text-emerald-400 text-5xl shadow-2xl shadow-emerald-500/20">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION ACCORDION -->
+  <section id="faq" class="py-20 bg-elite-850 border-t border-slate-800/80">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center mb-14 space-y-2">
+        <span class="text-cyan-400 font-semibold tracking-wider text-xs uppercase">Got Questions?</span>
+        <h2 class="text-3xl font-extrabold text-white">Frequently Asked Questions</h2>
+        <p class="text-slate-400 text-sm">Everything you need to know about setting up and using EliteView.</p>
+      </div>
+
+      <div class="space-y-4" id="faqAccordion">
+        
+        <!-- FAQ Item 1 -->
+        <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden">
+          <button onclick="toggleFaq(1)" class="w-full py-4 px-6 text-left flex justify-between items-center text-white font-medium text-base hover:text-cyan-400 transition-colors">
+            <span>Does EliteView require an internet connection to run?</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" id="faq-icon-1"></i>
+          </button>
+          <div class="px-6 pb-4 text-sm text-slate-400 hidden" id="faq-answer-1">
+            No! EliteView is designed primarily as a local offline media player and converter suite. All video decoding, music playback, and image-to-PDF processing happen natively on your device without using mobile data or Wi-Fi.
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden">
+          <button onclick="toggleFaq(2)" class="w-full py-4 px-6 text-left flex justify-between items-center text-white font-medium text-base hover:text-cyan-400 transition-colors">
+            <span>Can I watch videos in a floating window while using other apps?</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" id="faq-icon-2"></i>
+          </button>
+          <div class="px-6 pb-4 text-sm text-slate-400 hidden" id="faq-answer-2">
+            Yes, EliteView includes native Android Picture-in-Picture (PiP) and floating pop-up support. Simply press the PiP button or press the home key while playing a video to shrink it into a draggable, resizable floating screen.
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden">
+          <button onclick="toggleFaq(3)" class="w-full py-4 px-6 text-left flex justify-between items-center text-white font-medium text-base hover:text-cyan-400 transition-colors">
+            <span>Which Android versions are supported?</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" id="faq-icon-3"></i>
+          </button>
+          <div class="px-6 pb-4 text-sm text-slate-400 hidden" id="faq-answer-3">
+            EliteView supports Android 8.0 (Oreo, API level 26) all the way up through the latest Android 14 and Android 15 updates, optimized for both ARMv7 and ARM64 processors.
+          </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden">
+          <button onclick="toggleFaq(4)" class="w-full py-4 px-6 text-left flex justify-between items-center text-white font-medium text-base hover:text-cyan-400 transition-colors">
+            <span>How does the built-in Image-to-PDF converter work?</span>
+            <i class="fa-solid fa-chevron-down text-xs transition-transform duration-200" id="faq-icon-4"></i>
+          </button>
+          <div class="px-6 pb-4 text-sm text-slate-400 hidden" id="faq-answer-4">
+            You can select multiple photos, camera scans, or screenshots from your local gallery inside EliteView. The app compiles and compresses them into a high-quality PDF document instantly stored in your internal storage.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CALL TO ACTION BANNER -->
+  <section class="py-20 relative overflow-hidden text-center">
+    <div class="max-w-5xl mx-auto px-4">
+      <div class="glass-card rounded-3xl p-10 sm:p-14 border border-orange-500/30 relative">
+        <div class="relative z-10 space-y-6">
+          <div class="w-16 h-16 mx-auto mb-2 drop-shadow-[0_8px_20px_rgba(255,87,34,0.5)]">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+              <circle cx="50" cy="50" r="48" fill="#ff5722"/>
+              <path d="M 58 11 C 65 11, 87 23, 89 31 C 89 33, 85 32, 78 26 C 71 20, 58 17, 58 11 Z" fill="#ffffff" opacity="0.85"/>
+              <circle cx="61" cy="9" r="3.5" fill="#ffffff" opacity="0.85"/>
+              <path d="M 39 31.5 C 36.5 30 35 31.2 35 34.2 L 35 65.8 C 35 68.8 36.5 70 39 68.5 L 68 52.8 C 70.5 51.4 70.5 48.6 68 47.2 Z" fill="#ffffff"/>
+            </svg>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Upgrade Your Android Media Experience Today</h2>
+          <p class="text-slate-300 max-w-xl mx-auto text-sm sm:text-base">
+            Lightweight, battery-friendly, and packed with playback capabilities. Download EliteView directly from the official Google Play Store.
+          </p>
+          <div class="flex justify-center items-center pt-2">
+            <a href="https://play.google.com/store/apps/details?id=com.rishi.eliteview" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-9 py-4 rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-400 hover:to-amber-500 text-white font-bold text-base shadow-xl shadow-orange-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3">
+              <i class="fa-brands fa-google-play text-lg"></i>
+              <span>Install from Google Play</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-elite-900 border-t border-slate-800/80 py-12 text-slate-400 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+        
+        <!-- Col 1 -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2 text-white font-bold text-lg">
+            <div class="w-7 h-7 flex-shrink-0">
+              <svg viewBox="0 0 100 100" class="w-full h-full">
+                <circle cx="50" cy="50" r="48" fill="#ff5722"/>
+                <path d="M 58 11 C 65 11, 87 23, 89 31 C 89 33, 85 32, 78 26 C 71 20, 58 17, 58 11 Z" fill="#ffffff" opacity="0.85"/>
+                <circle cx="61" cy="9" r="3.5" fill="#ffffff" opacity="0.85"/>
+                <path d="M 39 31.5 C 36.5 30 35 31.2 35 34.2 L 35 65.8 C 35 68.8 36.5 70 39 68.5 L 68 52.8 C 70.5 51.4 70.5 48.6 68 47.2 Z" fill="#ffffff"/>
+              </svg>
+            </div>
+            <span>EliteView Video All Format</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Universal Android multimedia player, background audio streamer, and private utility suite.
+          </p>
+          <div class="pt-2 text-xs font-mono text-slate-500">
+            Package: <span class="text-orange-400">com.rishi.eliteview</span>
+          </div>
+        </div>
+
+        <!-- Col 2 -->
+        <div>
+          <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3">Quick Navigation</h4>
+          <ul class="space-y-2 text-xs">
+            <li><a href="#features" class="hover:text-orange-400">All Features</a></li>
+            <li><a href="#playground" class="hover:text-orange-400">Interactive Demo</a></li>
+            <li><a href="#specs" class="hover:text-orange-400">Audio & Video Specs</a></li>
+            <li><a href="#privacy" class="hover:text-orange-400">Security Commitment</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3 -->
+        <div>
+          <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3">Resources</h4>
+          <ul class="space-y-2 text-xs">
+            <li><button onclick="openModal('privacyModal')" class="hover:text-orange-400">Privacy Policy</button></li>
+            <li><button onclick="openModal('termsModal')" class="hover:text-orange-400">Terms of Use</button></li>
+            <li><a href="#faq" class="hover:text-orange-400">Troubleshooting & FAQ</a></li>
+            <li><button onclick="openModal('feedbackModal')" class="hover:text-orange-400">Submit Feedback</button></li>
+          </ul>
+        </div>
+
+        <!-- Col 4 -->
+        <div>
+          <h4 class="text-white font-semibold text-xs uppercase tracking-wider mb-3">App Verification</h4>
+          <div class="p-3 bg-elite-850 rounded-xl border border-slate-800 space-y-1.5 text-[11px]">
+            <div class="flex justify-between">
+              <span>Platform:</span>
+              <a href="https://play.google.com/store/apps/details?id=com.rishi.eliteview" target="_blank" rel="noopener noreferrer" class="text-orange-400 font-semibold hover:underline">Google Play</a>
+            </div>
+            <div class="flex justify-between">
+              <span>App Size:</span>
+              <span class="text-white font-mono">&lt; 18 MB</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Security:</span>
+              <span class="text-emerald-400">Play Protect Verified</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <p>© 2026 EliteView Team. All rights reserved.</p>
+        <div class="flex items-center gap-4">
+          <a href="https://play.google.com/store/apps/details?id=com.rishi.eliteview" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-slate-300 hover:text-orange-400 transition-colors">
+            <i class="fa-brands fa-google-play text-orange-400"></i> Google Play Store Official
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- DOWNLOAD MODAL -->
+  <div id="downloadModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full rounded-3xl p-6 sm:p-8 border border-slate-700 shadow-2xl relative">
+      <button onclick="closeModal('downloadModal')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center space-y-2 mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-cyan-400 mx-auto flex items-center justify-center text-white text-xl shadow-lg">
+          <i class="fa-brands fa-android"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white">Get EliteView for Android</h3>
+        <p class="text-xs text-slate-400">Choose your preferred download source below.</p>
+      </div>
+
+      <div class="space-y-3">
+        <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 hover:border-cyan-400 transition-all text-white group">
+          <div class="flex items-center gap-3">
+            <i class="fa-brands fa-google-play text-2xl text-cyan-400"></i>
+            <div class="text-left">
+              <p class="text-xs text-slate-400">Recommended</p>
+              <p class="text-sm font-semibold">Google Play Store</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-white"></i>
+        </a>
+
+        <button onclick="triggerDirectDownload()" class="w-full flex items-center justify-between p-4 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 hover:border-indigo-400 transition-all text-white group">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-file-arrow-down text-2xl text-indigo-400"></i>
+            <div class="text-left">
+              <p class="text-xs text-slate-400">Offline Standalone</p>
+              <p class="text-sm font-semibold">Direct APK (17.4 MB)</p>
+            </div>
+          </div>
+          <i class="fa-solid fa-download text-xs text-slate-400 group-hover:text-white"></i>
+        </button>
+      </div>
+
+      <div id="downloadToast" class="mt-4 p-3 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs text-center hidden">
+        <i class="fa-solid fa-circle-check mr-1"></i> Download initiated! Check your notifications.
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY POLICY MODAL -->
+  <div id="privacyModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card max-w-2xl w-full max-h-[85vh] rounded-3xl p-6 sm:p-8 border border-slate-700 shadow-2xl flex flex-col relative">
+      <div class="flex justify-between items-center pb-4 border-b border-slate-800">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-shield-halved text-emerald-400"></i> EliteView Privacy Policy
+        </h3>
+        <button onclick="closeModal('privacyModal')" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="overflow-y-auto space-y-4 py-4 text-xs sm:text-sm text-slate-300 pr-2">
+        <p class="font-medium text-white">Last Updated: October 2026</p>
+        <p>EliteView (Package: <span class="font-mono text-cyan-400">com.rishi.eliteview</span>) values your privacy. We strictly adopt an on-device architecture:</p>
+        
+        <h4 class="font-bold text-white text-sm">1. Storage Permissions</h4>
+        <p>The app requests media read and write permissions (READ_MEDIA_VIDEO, READ_MEDIA_AUDIO, READ_MEDIA_IMAGES) strictly to discover, index, and play audio and video stored on your device, and to write converted PDF documents into your local storage.</p>
+        
+        <h4 class="font-bold text-white text-sm">2. Zero Cloud Transmissions</h4>
+        <p>None of your personal media, thumbnails, or generated PDFs are transmitted to any cloud servers, databases, or analytics engines.</p>
+
+        <h4 class="font-bold text-white text-sm">3. Background & Floating Playback</h4>
+        <p>The FOREGROUND_SERVICE and SYSTEM_ALERT_WINDOW permissions are utilized exclusively to facilitate uninterrupted background audio and picture-in-picture pop-up windows when multitasking.</p>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 text-right">
+        <button onclick="closeModal('privacyModal')" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMS MODAL -->
+  <div id="termsModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card max-w-lg w-full rounded-3xl p-6 border border-slate-700 shadow-2xl relative">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white">Terms of Use</h3>
+        <button onclick="closeModal('termsModal')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="py-4 text-xs text-slate-300 space-y-3">
+        <p>EliteView is provided as a utility media playback tool. Users are responsible for the legal ownership and licensing of the media played via the software.</p>
+        <p>No warranty is provided for format conversion errors on damaged or corrupted storage files.</p>
+      </div>
+      <div class="text-right">
+        <button onclick="closeModal('termsModal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-white">Understood</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK MODAL -->
+  <div id="feedbackModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full rounded-3xl p-6 border border-slate-700 shadow-2xl relative">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white">Feedback & Feature Requests</h3>
+        <button onclick="closeModal('feedbackModal')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="py-4 space-y-3">
+        <label class="block text-xs text-slate-300">Message / Feature Idea</label>
+        <textarea id="feedbackText" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-cyan-400" placeholder="e.g. Please add gesture control for playback speed..."></textarea>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button onclick="closeModal('feedbackModal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300">Cancel</button>
+        <button onclick="submitFeedback()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs text-white font-medium">Send Feedback</button>
+      </div>
+      <p id="feedbackToast" class="text-xs text-emerald-400 mt-2 text-center hidden">Thank you for helping us improve EliteView!</p>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & INTERACTIONS -->
+  <script>
+    // State management for hero simulator
+    let heroPlaying = true;
+    let heroTimer = 102; // seconds
+    let heroInterval = null;
+
+    function startHeroTimer() {
+      if (heroInterval) clearInterval(heroInterval);
+      heroInterval = setInterval(() => {
+        if (heroPlaying) {
+          heroTimer++;
+          if (heroTimer > 228) heroTimer = 0;
+          updateHeroDisplay();
+        }
+      }, 1000);
+    }
+
+    function updateHeroDisplay() {
+      const mins = Math.floor(heroTimer / 60);
+      const secs = heroTimer % 60;
+      const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      const timeElem = document.getElementById('heroCurrentTime');
+      const barElem = document.getElementById('heroProgressBar');
+      if (timeElem) timeElem.innerText = formatted;
+      if (barElem) {
+        const percent = (heroTimer / 228) * 100;
+        barElem.style.width = percent + '%';
+      }
+    }
+
+    function toggleHeroPlayback() {
+      heroPlaying = !heroPlaying;
+      const btn = document.getElementById('heroPlayBtnState');
+      const icon = document.getElementById('heroPlayIcon');
+      const ring = document.getElementById('heroPulseRing');
+
+      if (heroPlaying) {
+        btn.className = "fa-solid fa-pause";
+        icon.className = "fa-solid fa-play text-cyan-400 text-3xl ml-1";
+        ring.classList.add('animate-spin');
+      } else {
+        btn.className = "fa-solid fa-play";
+        icon.className = "fa-solid fa-pause text-cyan-400 text-3xl";
+        ring.classList.remove('animate-spin');
+      }
+    }
+
+    function skipHero(amount) {
+      heroTimer += amount;
+      if (heroTimer < 0) heroTimer = 0;
+      if (heroTimer > 228) heroTimer = 228;
+      updateHeroDisplay();
+    }
+
+    function scrubHeroTimeline(event) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+      heroTimer = Math.floor(ratio * 228);
+      updateHeroDisplay();
+    }
+
+    function changeHeroVolume() {
+      const icon = document.getElementById('heroVolIcon');
+      if (icon.classList.contains('fa-volume-high')) {
+        icon.className = "fa-solid fa-volume-low text-amber-400";
+      } else if (icon.classList.contains('fa-volume-low')) {
+        icon.className = "fa-solid fa-volume-xmark text-rose-400";
+      } else {
+        icon.className = "fa-solid fa-volume-high text-cyan-400";
+      }
+    }
+
+    function toggleHeroPipAlert() {
+      switchTab('pip');
+      const elem = document.getElementById('playground');
+      if (elem) elem.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Interactive Demo / Playground Tabs
+    function switchTab(tabId) {
+      const tabs = ['player', 'pip', 'audio', 'pdf'];
+      tabs.forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        const btn = document.getElementById(`tab-${t}`);
+        if (view) view.classList.add('hidden');
+        if (btn) {
+          btn.className = "tab-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-elite-800 text-slate-300 hover:text-white hover:bg-slate-700 flex items-center gap-2";
+        }
+      });
+
+      const activeView = document.getElementById(`view-${tabId}`);
+      const activeBtn = document.getElementById(`tab-${tabId}`);
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.className = "tab-btn px-5 py-2.5 rounded-xl font-medium text-sm transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 flex items-center gap-2";
+      }
+    }
+
+    // Demo Video Progress
+    let demoPlaying = false;
+    function toggleDemoPlay() {
+      demoPlaying = !demoPlaying;
+      const icon = document.getElementById('demoPlayBtn');
+      if (demoPlaying) {
+        icon.className = "fa-solid fa-pause";
+      } else {
+        icon.className = "fa-solid fa-play";
+      }
+    }
+
+    function updateDemoProgress(event) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+      const bar = document.getElementById('demoProgress');
+      if (bar) bar.style.width = (ratio * 100) + '%';
+    }
+
+    function simulateGesture(type) {
+      const notice = document.getElementById('gestureNotice');
+      const icon = document.getElementById('gestureIcon');
+      const label = document.getElementById('gestureLabel');
+
+      if (!notice || !icon || !label) return;
+
+      if (type === 'bright') {
+        icon.className = "fa-solid fa-sun text-amber-400";
+        label.innerText = "Brightness: 92%";
+      } else {
+        icon.className = "fa-solid fa-volume-high text-cyan-400";
+        label.innerText = "Volume: 85%";
+      }
+
+      notice.classList.remove('hidden');
+      setTimeout(() => {
+        notice.classList.add('hidden');
+      }, 2000);
+    }
+
+    function alertPiPAction(msg) {
+      const notice = document.getElementById('gestureNotice');
+      if (notice) {
+        notice.innerText = msg;
+        notice.classList.remove('hidden');
+        setTimeout(() => notice.classList.add('hidden'), 2000);
+      }
+    }
+
+    // PDF Demo Simulator
+    function addMockScanImage() {
+      const btn = document.getElementById('pdfConvertBtn');
+      if (btn) btn.innerHTML = `<i class="fa-solid fa-file-arrow-down"></i><span>Convert 3 Images to PDF</span>`;
+      const msg = document.getElementById('pdfStatusMsg');
+      if (msg) {
+        msg.innerText = "Added 'Page_03_Diagram.jpg' to conversion queue.";
+        msg.classList.remove('hidden');
+      }
+    }
+
+    function simulatePdfConversion() {
+      const btn = document.getElementById('pdfConvertBtn');
+      const msg = document.getElementById('pdfStatusMsg');
+      if (btn) {
+        btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Generating PDF locally...</span>`;
+      }
+      setTimeout(() => {
+        if (btn) {
+          btn.innerHTML = `<i class="fa-solid fa-circle-check"></i><span>EliteView_Doc.pdf Generated!</span>`;
+        }
+        if (msg) {
+          msg.innerText = "Saved to Device: /Storage/EliteView/PDFs/EliteView_Doc.pdf (1.2 MB)";
+          msg.classList.remove('hidden');
+        }
+      }, 1000);
+    }
+
+    // Draggable PiP simulator for desktop mouse and mobile touch
+    const pipWindow = document.getElementById('draggablePip');
+    if (pipWindow) {
+      let isDragging = false;
+      let startX, startY, initialLeft, initialTop;
+
+      const onMouseDown = (e) => {
+        isDragging = true;
+        startX = e.clientX || (e.touches && e.touches[0].clientX);
+        startY = e.clientY || (e.touches && e.touches[0].clientY);
+        const rect = pipWindow.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+      };
+
+      const onMouseMove = (e) => {
+        if (!isDragging) return;
+        const currentX = e.clientX || (e.touches && e.touches[0].clientX);
+        const currentY = e.clientY || (e.touches && e.touches[0].clientY);
+        const dx = currentX - startX;
+        const dy = currentY - startY;
+        pipWindow.style.transform = `translate(${dx}px, ${dy}px)`;
+      };
+
+      const onMouseUp = () => {
+        isDragging = false;
+      };
+
+      pipWindow.addEventListener('mousedown', onMouseDown);
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+
+      pipWindow.addEventListener('touchstart', onMouseDown, { passive: true });
+      window.addEventListener('touchmove', onMouseMove, { passive: true });
+      window.addEventListener('touchend', onMouseUp);
+    }
+
+    // FAQ Accordion Toggle
+    function toggleFaq(id) {
+      const ans = document.getElementById(`faq-answer-${id}`);
+      const icon = document.getElementById(`faq-icon-${id}`);
+      if (!ans) return;
+
+      if (ans.classList.contains('hidden')) {
+        ans.classList.remove('hidden');
+        if (icon) icon.style.transform = "rotate(180deg)";
+      } else {
+        ans.classList.add('hidden');
+        if (icon) icon.style.transform = "rotate(0deg)";
+      }
+    }
+
+    // Mobile Navbar Menu Toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      const icon = document.getElementById('menuIcon');
+      if (!menu) return;
+
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        if (icon) icon.className = "fa-solid fa-xmark text-xl";
+      } else {
+        menu.classList.add('hidden');
+        if (icon) icon.className = "fa-solid fa-bars text-xl";
+      }
+    }
+
+    // Modal Handlers
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }
+    }
+
+    function openDownloadModal() {
+      openModal('downloadModal');
+    }
+
+    function triggerDirectDownload() {
+      const toast = document.getElementById('downloadToast');
+      if (toast) {
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 4000);
+      }
+    }
+
+    function submitFeedback() {
+      const area = document.getElementById('feedbackText');
+      const toast = document.getElementById('feedbackToast');
+      if (area) area.value = "";
+      if (toast) {
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+          closeModal('feedbackModal');
+        }, 2000);
+      }
+    }
+
+    // Init loops on page load
+    window.onload = function() {
+      startHeroTimer();
+    };
+  </script>
+</body>
+</html>
